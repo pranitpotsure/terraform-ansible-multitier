@@ -6,6 +6,7 @@
     frontend_dir: "/opt/student-frontend"
 
   tasks:
+
     - name: Install required packages
       yum:
         name:
@@ -14,27 +15,54 @@
           - nodejs
         state: present
 
-    - name: Enable and start Nginx
-      service:
-        name: nginx
-        state: started
-        enabled: yes
+    - name: Ensure frontend directory is clean
+      file:
+        path: "{{ frontend_dir }}"
+        state: absent
 
     - name: Clone application repository
       git:
         repo: "{{ app_repo }}"
         dest: "{{ frontend_dir }}"
         version: main
+        force: yes
+
+    - name: Fix ownership to ec2-user
+      file:
+        path: "{{ frontend_dir }}"
+        owner: ec2-user
+        group: ec2-user
+        recurse: yes
 
     - name: Install frontend dependencies
+      become_user: ec2-user
       command: npm install
       args:
         chdir: "{{ frontend_dir }}/ems-frontend"
 
     - name: Build React frontend
+      become_user: ec2-user
       command: npm run build
       args:
         chdir: "{{ frontend_dir }}/ems-frontend"
+
+    - name: Remove old nginx files
+      file:
+        path: /usr/share/nginx/html
+        state: absent
+
+    - name: Recreate nginx root directory
+      file:
+        path: /usr/share/nginx/html
+        state: directory
+        owner: nginx
+        group: nginx
+
+    - name: Deploy frontend build to Nginx
+      copy:
+        src: "{{ frontend_dir }}/ems-frontend/dist/"
+        dest: /usr/share/nginx/html/
+        remote_src: yes
 
     - name: Configure Nginx reverse proxy
       copy:
@@ -51,22 +79,16 @@
                   try_files $uri /index.html;
               }
 
-             location /api/ {
-               proxy_pass http://{{ internal_alb_dns }}:8080/;
-               proxy_set_header Host $host;
-               proxy_set_header X-Real-IP $remote_addr;
-               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-               }
-
+              location /api/ {
+                  proxy_pass http://{{ internal_alb_dns }}:8080;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              }
           }
 
-    - name: Deploy frontend build to Nginx
-      copy:
-        src: "{{ frontend_dir }}/ems-frontend/dist/"
-        dest: /usr/share/nginx/html/
-        remote_src: yes
-
-    - name: Restart Nginx
+    - name: Enable and restart Nginx
       service:
         name: nginx
         state: restarted
+        enabled: yes
