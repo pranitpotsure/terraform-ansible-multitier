@@ -13,3 +13,9 @@ variable "instance_type" {
 variable "key_name" {
   default = "DevOps"
 }
+
+variable "db_password" {
+  description = "RDS master password"
+  type        = string
+  sensitive   = true
+}

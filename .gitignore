@@ -11,6 +11,8 @@
 *.tfstate.*
 terraform.tfstate
 terraform.tfstate.backup
+*.tfvars
+
 
 # Terraform lock file (KEEP this, so DO NOT ignore)
 !.terraform.lock.hcl

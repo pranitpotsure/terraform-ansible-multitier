@@ -10,7 +10,7 @@ resource "aws_db_instance" "rds" {
   allocated_storage      = 20
   db_name                = "appdb"
   username               = "admin"
-  password               = "Admin123"
+  password               = var.db_password
   multi_az               = true
   vpc_security_group_ids = [aws_security_group.db_sg.id]
   db_subnet_group_name   = aws_db_subnet_group.db_subnet.name

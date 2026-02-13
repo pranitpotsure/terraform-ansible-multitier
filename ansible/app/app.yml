@@ -6,11 +6,7 @@
     backend_dir: "/opt/student-backend"
     app_port: 8080
 
-    # These should come from Terraform outputs later
-    db_host: "RDS_ENDPOINT_HERE"
-    db_name: "studentdb"
-    db_user: "admin"
-    db_password: "password"
+    
 
   tasks:
     - name: Install Java, Maven, Git
@@ -34,25 +30,26 @@
 
     - name: Create systemd service for backend
       copy:
-        dest: /etc/systemd/system/student-backend.service
-        content: |
-          [Unit]
-          Description=Student Management Backend
-          After=network.target
+       dest: /etc/systemd/system/student-backend.service
+       content: |
+         [Unit]
+         Description=Student Management Backend
+         After=network.target
 
-          [Service]
-          Environment=SPRING_DATASOURCE_URL=jdbc:mysql://{{ db_host }}:3306/{{ db_name }}
-          Environment=SPRING_DATASOURCE_USERNAME={{ db_user }}
-          Environment=SPRING_DATASOURCE_PASSWORD={{ db_password }}
-          ExecStart=/usr/bin/java -jar {{ backend_dir }}/ems-backend/target/*.jar
-          Restart=always
-          User=root
+         [Service]
+         Environment=SPRING_DATASOURCE_URL=jdbc:mysql://{{ db_host }}:3306/{{ db_name }}
+         Environment=SPRING_DATASOURCE_USERNAME={{ db_user }}
+         Environment=SPRING_DATASOURCE_PASSWORD={{ db_password }}
+         ExecStart=/usr/bin/java -jar {{ backend_dir }}/ems-backend/target/ems-backend-0.0.1-SNAPSHOT.jar
+         Restart=always
+         User=root
 
-          [Install]
-          WantedBy=multi-user.target
+         [Install]
+         WantedBy=multi-user.target
+
 
     - name: Reload systemd
-      command: systemctl daemon-reexec
+      command: systemctl daemon-reload
 
     - name: Start backend service
       systemd:

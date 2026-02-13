@@ -7,6 +7,7 @@ resource "aws_security_group" "public_alb_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -24,6 +25,19 @@ resource "aws_security_group" "web_sg" {
     protocol        = "tcp"
     security_groups = [aws_security_group.public_alb_sg.id] #added public alb SG so the incoming traffic coming form ALB are recived by web SG
   }
+   ingress {
+  from_port   = 22
+  to_port     = 22
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]  # cidr_blocks = ["YOUR_IP/32"]
+}
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  } 
 }
 
 # This is for internal ALB but only access the traffic form Web_sg on port no 8080
@@ -45,6 +59,19 @@ resource "aws_security_group" "app_sg" {
     to_port         = 8080
     protocol        = "tcp"
     security_groups = [aws_security_group.internal_alb_sg.id] #traffic allowed from internal ALB 
+  }
+  # SSH only from Web tier
+  ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow SSH from any IP (for development purposes)
+  }
+   egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
