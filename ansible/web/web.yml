@@ -1,0 +1,48 @@
+- hosts: localhost
+  become: true
+
+  vars:
+    app_repo: "https://github.com/pranitpotsure/project-app.git"
+    frontend_dir: "/opt/student-frontend"
+
+  tasks:
+    - name: Install required packages
+      yum:
+        name:
+          - nginx
+          - git
+          - nodejs
+        state: present
+
+    - name: Enable and start Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Clone application repository
+      git:
+        repo: "{{ app_repo }}"
+        dest: "{{ frontend_dir }}"
+        version: main
+
+    - name: Install frontend dependencies
+      command: npm install
+      args:
+        chdir: "{{ frontend_dir }}/ems-frontend"
+
+    - name: Build React frontend
+      command: npm run build
+      args:
+        chdir: "{{ frontend_dir }}/ems-frontend"
+
+    - name: Deploy frontend build to Nginx
+      copy:
+        src: "{{ frontend_dir }}/ems-frontend/dist/"
+        dest: /usr/share/nginx/html/
+        remote_src: yes
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted

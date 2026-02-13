@@ -1,0 +1,88 @@
+############################
+# Terraform
+############################
+
+# Local terraform directories
+**/.terraform/*
+.terraform/
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+terraform.tfstate
+terraform.tfstate.backup
+
+# Terraform lock file (KEEP this, so DO NOT ignore)
+!.terraform.lock.hcl
+
+# Terraform plan files
+*.tfplan
+
+# Crash logs
+crash.log
+crash.*.log
+
+############################
+# Terraform provider binaries (Windows)
+############################
+terraform-provider-*
+*.exe
+
+############################
+# Sensitive variable files
+############################
+*.tfvars
+*.tfvars.json
+
+############################
+# Ansible
+############################
+*.retry
+
+############################
+# Logs
+############################
+*.log
+/var/log/*
+userdata.log
+
+############################
+# OS / Editor files
+############################
+.DS_Store
+Thumbs.db
+desktop.ini
+
+############################
+# IDEs
+############################
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.iml
+
+############################
+# Node / React (if any build output ever appears)
+############################
+node_modules/
+dist/
+build/
+
+############################
+# Java / Maven
+############################
+target/
+*.class
+
+############################
+# Python
+############################
+__pycache__/
+*.pyc
+
+############################
+# Backup files
+############################
+*.bak
+*.backup
