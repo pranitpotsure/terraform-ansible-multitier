@@ -40,6 +40,15 @@ resource "aws_lb_target_group" "app_tg" {
   port     = 8080 # this is the port on which the app servers will be listening for traffic from the internal ALB
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
+   health_check {  # this add a health check configuration to the target group, the health check is used to determine the health of the registered targets (app servers) and route traffic only to healthy targets
+    path                = "/api/students"
+    protocol            = "HTTP"
+    matcher             = "200"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
 }
 
 # this block creates a listener for the internal ALB that listens on port 8080 and forwards traffic to the app target group, the listener is used to define the protocol and port that the internal ALB will listen on and the default action to take when traffic is received (in this case, forward to the app target group)
