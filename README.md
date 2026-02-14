@@ -3,7 +3,7 @@
 ```{=html}
 <p align="center">
 ```
-`<img src="docs/architecture.png" width="750"/>`{=html}
+`<img src="docs/architecture.jpg" width="750"/>`{=html}
 ```{=html}
 </p>
 ```
