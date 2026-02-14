@@ -3,7 +3,7 @@
 <p align="center">
   <img src="./docs/architecture.jpg" alt="Architecture Diagram" width="750"/>
 </p>
------------------------------------------------------------------
+
 ## 🎯 What This Project Demonstrates
 
 A production-style **3-tier AWS architecture** built using **Terraform
