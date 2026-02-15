@@ -1,7 +1,6 @@
 # this block creates a DB subnet group for the RDS instance, which is used to specify the subnets in which the RDS instance will be launched. The subnet IDs are obtained from the private subnets created in the VPC.
 resource "aws_db_subnet_group" "db_subnet" {
-  subnet_ids = aws_subnet.private[*].id # this is used to specify the subnets in which the RDS instance will be launched, the [*] is used to get all the subnets created in private subnet 
-}
+  subnet_ids = aws_subnet.private_db[*].id # this is used to specify the subnets in which the RDS instance will be launched, the [*] is used to get all the subnets created in private_db subnet and .id is used to get the id of those subnets
 
 # this block creates a security group for the RDS instance, which is used to specify the inbound and outbound traffic rules for the RDS instance. 
 resource "aws_db_instance" "rds" {

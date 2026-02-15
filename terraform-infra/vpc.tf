@@ -28,13 +28,29 @@ resource "aws_subnet" "public" {
 
 
 # This block creates a private subnet
-resource "aws_subnet" "private" {
+resource "aws_subnet" "private_app" {
   count             = 2
   vpc_id            = aws_vpc.main.id
-  cidr_block        = cidrsubnet(var.vpc_cidr, 8, count.index + 10) # Creates subnets starting from the .10 range (skipping the first 10 ranges for future use)
-  availability_zone = element(["ap-south-1a", "ap-south-1b"], count.index)
-  tags              = { Name = "private-${count.index}" }
+  cidr_block        = cidrsubnet(var.vpc_cidr, 8, count.index + 10) # Here we are adding 10 to the count.index to create a different range for the private subnets. This ensures that the private subnets do not overlap with the public subnets.
+  availability_zone = element(["ap-south-1a","ap-south-1b"], count.index)
+
+  tags = {
+    Name = "private-app-${count.index}"
+  }
 }
+
+# This block creates another private subnet for the database layer
+resource "aws_subnet" "private_db" {
+  count             = 2
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = cidrsubnet(var.vpc_cidr, 8, count.index + 20)
+  availability_zone = element(["ap-south-1a","ap-south-1b"], count.index)
+
+  tags = {
+    Name = "private-db-${count.index}"
+  }
+}
+
 
 
 # This block creates a route table for the public subnet

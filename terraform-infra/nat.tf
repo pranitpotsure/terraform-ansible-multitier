@@ -36,6 +36,6 @@ resource "aws_route" "private_internet_access" {
 # This block associates the private route table with the private subnets to ensure that instances in the private subnets use the NAT Gateway for outbound internet access
 resource "aws_route_table_association" "private_assoc" {
   count          = 2
-  subnet_id      = aws_subnet.private[count.index].id
+  subnet_id      = aws_subnet.private_app[*].id # Here we are associating the private route table with the private application subnets. The [*] syntax is used to reference all instances of the private_app subnet created by the count parameter.
   route_table_id = aws_route_table.private_rt.id
 }

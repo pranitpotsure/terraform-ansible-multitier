@@ -30,7 +30,7 @@ resource "aws_lb" "internal_alb" {
   name               = "private-app-alb"
   internal           = true # this is used to specify that the ALB is internal and not exposed to the internet
   load_balancer_type = "application"
-  subnets            = aws_subnet.private[*].id                # this is used to attach both private subnets to the internal ALB, the [*] is used to get all the subnets created in private subnet and .id is used to get the id of those subnets
+  subnets = aws_subnet.private_app[*].id              # this is used to attach both private subnets to the internal ALB, the [*] is used to get all the subnets created in private subnet and .id is used to get the id of those subnets
   security_groups    = [aws_security_group.internal_alb_sg.id] # this is used to attach the security group created for internal ALB to the internal ALB
 }
 

@@ -75,7 +75,7 @@ resource "aws_autoscaling_group" "app_asg" {
   min_size            = 2
   desired_capacity    = 2
   max_size            = 4
-  vpc_zone_identifier = aws_subnet.private[*].id         # this is used to specify the subnets in which the ASG will launch instances, the [*] is used to get all the subnets created in private subnet
+  vpc_zone_identifier = aws_subnet.private_app[*].id  # this is used to specify the subnets in which the ASG will launch instances, the [*] is used to get all the subnets created in private subnet
   target_group_arns   = [aws_lb_target_group.app_tg.arn] # this is used to specify the target group to which the instances launched by the ASG will be registered for load balancing by the internal ALB
 
   launch_template {
