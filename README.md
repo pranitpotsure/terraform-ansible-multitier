@@ -1,7 +1,7 @@
 # 🚀 Terraform-Ansible Multi-Tier Student Management System
 
 <p align="center">
-  <img src="./docs/architecture.jpg" alt="Architecture Diagram" width="750"/>
+  <img src="./docs/architecture.png" alt="Architecture Diagram" width="750"/>
 </p>
 
 ## 🎯 What This Project Demonstrates
