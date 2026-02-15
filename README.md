@@ -113,7 +113,11 @@ Get public endpoint:
 ``` bash
 terraform output public_alb_dns
 ```
-
+------------------------------------------------------------------------
+## Use this Repo for Application Code 
+``` bash
+https://github.com/pranitpotsure/project-app.git
+```
 ------------------------------------------------------------------------
 
 ## 🔐 Security Highlights
